@@ -10,5 +10,7 @@ private:
 public:
     Snake();
     ~Snake();
-    
+    void Init(std::pair<char, char>&);
+    std::pair<char, char> * InformHead(void);
+    int InformLen(void);
 };

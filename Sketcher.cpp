@@ -1,5 +1,7 @@
 #include <iostream>
 #include <Windows.h>
+#include <string>
+
 #include "Sketcher.hpp"
 
 Sketcher::Sketcher() {
@@ -14,6 +16,7 @@ void Sketcher::drawMenu(void){
     system("mode con:cols=100 lines=50");
     system("title SnakeGame. By Jeonghyun Nam");
     
+    this->drawWall();
     gotoxy(40, 24);
     std::cout<<"*******************";
     gotoxy(40, 25);
@@ -27,6 +30,7 @@ void Sketcher::drawMenu(void){
 
 void Sketcher::drawLoad(void){
     system("cls");
+    this->drawWall();
     gotoxy(50, 25);
     for(int i=3; i>0; i--){
         std::cout<<i;
@@ -36,10 +40,41 @@ void Sketcher::drawLoad(void){
 }
 
 void Sketcher::drawInGame(void){
+    int len = 1;
 
+    this->drawWall();
+    this->drawSnake(len);
+    system("pause>null");
 }
 
+void Sketcher::drawWall(void){
+    //width : 100, height : 50
+    system("cls");
+    gotoxy(0,0);
+    std::string widthwall = "==================================================";
+    std::cout<<widthwall + widthwall;
+    for(int i=1; i<=48; i++){
+        gotoxy(0, i);
+        std::cout<<"|";
+        gotoxy(99, i);
+        std::cout<<"|";
+    }
+    gotoxy(0,49);
+    std::cout<<widthwall + widthwall;
+}
+
+void Sketcher::drawSnake(int& snakelen){
+    for(int i=0; i<snakelen; i++){
+        gotoxy((int)(this->infoSnake+i)->first, (int)(this->infoSnake+i)->second);
+        std::cout<<"*"; 
+    }
+}
+
+
+
 void Sketcher::drawGameFinish(void){
+    system("cls");
+    this->drawWall();
     gotoxy(40, 24);
     std::cout<<"*******************";
     gotoxy(40, 25);
@@ -54,6 +89,7 @@ void Sketcher::drawGameFinish(void){
 
 void Sketcher::drawProperInput(void){
     system("cls");
+    this->drawWall();
     gotoxy(38, 24);
     std::cout<<"***********************";
     gotoxy(38, 25);
@@ -62,6 +98,13 @@ void Sketcher::drawProperInput(void){
     std::cout<<"***********************";
     system("pause>null");
 }
+
+void Sketcher::getSnake(std::pair<char, char> *p_snake, int& len) {
+    this->infoSnake = p_snake;
+    this->snakelen = len;
+}
+
+
 
 void Sketcher::gotoxy(int x, int y)
 {
