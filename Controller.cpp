@@ -23,6 +23,7 @@ Controller::Controller()
     this->ptr_sketcher = NULL;
     this->ptr_referee = NULL;
     this->ptr_snake = NULL;
+    this->ptr_food = NULL;
 }
 
 Controller::~Controller()
@@ -60,46 +61,62 @@ bool Controller::load()
 
 void Controller::start()
 {
-    int _step = 0;
+    int _score = 0, _speed = 1, _speedStack = 99999;
+    float _speedscale = 5.0;
     bool _isTerminate, _isContact;
-    char input;
+    char input = UP, inputs;
     std::pair<char, char> future_snake;
     while (1)
     {
         // Draw all Scene
-        this->ptr_sketcher->drawInGame();
+        this->ptr_sketcher->drawInGame(_score);
 
         // Get next input
-        if (_getch() == MAGICKEY)
+        if (kbhit())
         {
-            input = _getch();
-            if (input != UP && input == DOWN && input == LEFT && input == RIGHT)
-                continue;
+            if (getch() == MAGICKEY)
+            {
+                inputs = getch();
+                FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+            }
         }
-        else
-            continue;
 
-        // Move snake
-        future_snake = this->MoveSnakeHead(input);
+        // check
+        _speedStack += _speed;
 
-        // Check meet wall, self-intersection
-        _isTerminate = this->ptr_referee->isTerminate(future_snake);
-        if (_isTerminate)
-            break;
-
-        // Update Observer(get snakehead, len info)
-        this->updateObserver();
-
-        // Check food & snake intersect
-        _isContact = this->ptr_referee->contactFood(future_snake);
-        if (_isContact)
+        if ((float)_speedStack > (_speed * _speedscale))
         {
-            this->ptr_food->genFood();
-        }
-        this->ptr_snake->Move(_isContact, future_snake);
+            if (inputs == UP || inputs == DOWN || inputs == LEFT || inputs == RIGHT)
+            {
+                if (this->validInput(input, inputs))
+                {
+                    input = inputs;
+                }
+            }
+            // Move snake
+            future_snake = this->MoveSnakeHead(input);
 
-        this->updateObserver();
-        ++_step;
+            // Check food & snake intersect
+            _isContact = this->ptr_referee->contactFood(future_snake);
+            if (_isContact)
+            {
+                this->ptr_food->genFood();
+                _score += 10;
+            }
+            this->ptr_snake->Move(_isContact, future_snake);
+
+            this->updateObserver();
+
+            // Check meet wall, self-intersection
+            _isTerminate = this->ptr_referee->isTerminate();
+            if (_isTerminate)
+                break;
+
+            _speedscale = 5 / this->ptr_referee->adjustSpeed(_score);
+            _speedStack = 0;
+        }
+
+        Sleep(_speed);
     }
 }
 
@@ -121,6 +138,7 @@ bool Controller::end()
     while (1)
     {
         this->ptr_sketcher->drawGameFinish();
+        FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
         input = _getch();
         if (input == QUIT)
             return true;
@@ -136,8 +154,8 @@ void Controller::setObject()
     std::pair<char, char> snake_head;
     // Snake
     srand(time(0));
-    snake_head.first = rand() % 98 + 1;
-    snake_head.second = rand() % 48 + 1;
+    snake_head.first = 2 * (rand() % 28 + 1);
+    snake_head.second = rand() % 28 + 1;
     this->ptr_snake->Init(snake_head);
 
     // Food
@@ -176,11 +194,35 @@ std::pair<char, char> Controller::MoveSnakeHead(char &input)
         future_snake.second += 1;
         break;
     case LEFT:
-        future_snake.first -= 1;
+        future_snake.first -= 2;
         break;
     case RIGHT:
-        future_snake.first += 1;
+        future_snake.first += 2;
         break;
     }
     return future_snake;
+}
+
+bool Controller::validInput(char &input, char &cur_input)
+{
+    switch (input)
+    {
+    case UP:
+        if (cur_input == DOWN)
+            return false;
+        break;
+    case DOWN:
+        if (cur_input == UP)
+            return false;
+        break;
+    case LEFT:
+        if (cur_input == RIGHT)
+            return false;
+        break;
+    case RIGHT:
+        if (cur_input == LEFT)
+            return false;
+        break;
+    }
+    return true;
 }

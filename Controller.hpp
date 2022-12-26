@@ -25,4 +25,5 @@ public:
     void setObject(void);                        // set snake, food
     void updateObserver(void);                   // synchronize snake, food to sketcher, referee
     std::pair<char, char> MoveSnakeHead(char &); // move snakehead
+    bool validInput(char &, char &);
 };

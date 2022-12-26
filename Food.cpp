@@ -26,8 +26,8 @@ void Food::genFood(void)
     bool isRepeat = true;
     while (isRepeat)
     {
-        (this->food).first = rand() % 98;
-        (this->food).second = rand() % 48;
+        (this->food).first = 2 * (rand() % 28 + 1);
+        (this->food).second = rand() % 28 + 1;
         for (int i = 0; i < len_snake; i++)
         {
             if (this->food.first == (this->p_snake + i)->first && this->food.second == (this->p_snake + i)->second)

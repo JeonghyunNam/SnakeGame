@@ -4,16 +4,16 @@
 
 int main()
 {
-    std::unique_ptr<Controller> snakegame(new Controller);
-    bool isTerminate = false;
+    auto snakeGame = std::make_shared<Controller>();
+    auto isTerminate = false;
 
-    snakegame->menu();
+    snakeGame->menu();
     while (!isTerminate)
     {
-        if (snakegame->load())
+        if (snakeGame->load())
         {
-            snakegame->start();
-            isTerminate = snakegame->end();
+            snakeGame->start();
+            isTerminate = snakeGame->end();
         }
     }
 
