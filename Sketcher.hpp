@@ -1,9 +1,11 @@
 #pragma once
 #include <iostream>
 
-class Sketcher {
+class Sketcher
+{
 private:
     std::pair<char, char> *infoSnake = NULL;
+    std::pair<char, char> infoFood;
     int snakelen;
     void gotoxy(int, int);
 
@@ -17,10 +19,12 @@ public:
 
     void drawInGame(void);
     void drawWall(void);
-    void drawSnake(int&);
+    void drawSnake(void);
+    void drawFood(void);
 
     void drawGameFinish(void);
     void drawProperInput(void);
-    
-    void getSnake(std::pair<char, char>*, int&);
+
+    void getSnake(std::pair<char, char> *, int &);
+    void getFood(std::pair<char, char>);
 };

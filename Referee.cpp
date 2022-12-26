@@ -14,6 +14,17 @@ void Referee::getSnake(std::pair<char, char> *p_snake, int& len) {
         this->snakelen  = len;
 }
 
+void Referee::getFood(std::pair<char, char> food){
+    this->infoFood = food;
+}
+
+bool Referee::contactFood(std::pair<char, char>& future_snake_head){
+    if(future_snake_head.first == (this->infoFood).first && future_snake_head.second == (this->infoFood).second){
+        return true;
+    }
+    return false;
+}
+
 bool Referee::meetWall(std::pair<char, char>& snakehead){
     if (snakehead.first == 0  || snakehead.first == 99)  return true;
     if (snakehead.second == 0 || snakehead.second == 49) return true;

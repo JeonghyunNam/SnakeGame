@@ -1,19 +1,41 @@
 #include <iostream>
 #include "Food.hpp"
 
-Food::Food(){
+Food::Food()
+{
     this->p_snake = NULL;
+    this->len_snake = 0;
 }
 
-Food::~Food() {
-
-    
+Food::~Food()
+{
 }
-void Food::updateSnakeInfo(std::pair<char, char> *p_snakehead, int& len){
+void Food::updateSnakeInfo(std::pair<char, char> *p_snakehead, int &len)
+{
     this->p_snake = p_snakehead;
-    this->snakelen = len;
+    this->len_snake = len;
 }
 
-void Food::genFood(void){
+std::pair<char, char> Food::InformFood()
+{
+    return this->food;
+}
 
+void Food::genFood(void)
+{
+    bool isRepeat = true;
+    while (isRepeat)
+    {
+        (this->food).first = rand() % 98;
+        (this->food).second = rand() % 48;
+        for (int i = 0; i < len_snake; i++)
+        {
+            if (this->food.first == (this->p_snake + i)->first && this->food.second == (this->p_snake + i)->second)
+            {
+                isRepeat = true;
+                break;
+            }
+            isRepeat = false;
+        }
+    }
 }
