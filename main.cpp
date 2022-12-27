@@ -7,13 +7,13 @@ int main()
     auto snakeGame = std::make_shared<Controller>();
     auto isTerminate = false;
 
-    snakeGame->menu();
+    snakeGame->loadMenu();
     while (!isTerminate)
     {
-        if (snakeGame->load())
+        if (snakeGame->loadGame())
         {
-            snakeGame->start();
-            isTerminate = snakeGame->end();
+            snakeGame->doGame();
+            isTerminate = snakeGame->endGame();
         }
     }
 

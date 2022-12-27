@@ -14,62 +14,58 @@
 #define RIGHT 77
 #define MAGICKEY 224
 
-// Env Setting
-#define WIDTH 100
-#define HEIGHT 50
-
 Controller::Controller()
 {
-    this->ptr_sketcher = NULL;
-    this->ptr_referee = NULL;
-    this->ptr_snake = NULL;
-    this->ptr_food = NULL;
+    this->p_sketcher = NULL;
+    this->p_referee = NULL;
+    this->p_snake = NULL;
+    this->p_food = NULL;
 }
 
 Controller::~Controller()
 {
-    if (this->ptr_sketcher != NULL)
-        delete ptr_sketcher;
-    if (this->ptr_referee != NULL)
-        delete ptr_referee;
-    if (this->ptr_snake != NULL)
-        delete ptr_snake;
-    if (this->ptr_food != NULL)
-        delete ptr_food;
+    if (this->p_sketcher != NULL)
+        delete p_sketcher;
+    if (this->p_referee != NULL)
+        delete p_referee;
+    if (this->p_snake != NULL)
+        delete p_snake;
+    if (this->p_food != NULL)
+        delete p_food;
 }
 
-void Controller::menu()
+void Controller::loadMenu()
 {
     // Create Observer
-    this->ptr_sketcher = new Sketcher;
-    this->ptr_referee = new Referee;
+    this->p_sketcher = new Sketcher;
+    this->p_referee = new Referee;
 
-    this->ptr_sketcher->drawMenu();
+    this->p_sketcher->drawMenu();
 }
 
-bool Controller::load()
+bool Controller::loadGame()
 {
-    this->ptr_snake = new Snake;
-    this->ptr_food = new Food;
+    this->p_snake = new Snake;
+    this->p_food = new Food;
     this->setObject();      // Snake, Food
     this->updateObserver(); // Sketcher, Referee
 
-    this->ptr_sketcher->drawLoad();
+    this->p_sketcher->drawLoad();
 
     return true;
 }
 
-void Controller::start()
+void Controller::doGame()
 {
-    int _score = 0, _speed = 1, _speedStack = 99999;
-    float _speedscale = 5.0;
-    bool _isTerminate, _isContact;
+    int score = 0, speed = 1, speedstack = 99999;
+    float speedscale = 5.0;
+    bool b_is_terminate, b_is_contact;
     char input = UP, inputs;
-    std::pair<char, char> future_snake;
+    std::pair<char, char> future_snakepos;
     while (1)
     {
         // Draw all Scene
-        this->ptr_sketcher->drawInGame(_score);
+        this->p_sketcher->drawInGame(score);
 
         // Get next input
         if (kbhit())
@@ -82,128 +78,128 @@ void Controller::start()
         }
 
         // check
-        _speedStack += _speed;
+        speedstack += speed;
 
-        if ((float)_speedStack > (_speed * _speedscale))
+        if ((float)speedstack > (speed * speedscale))
         {
             if (inputs == UP || inputs == DOWN || inputs == LEFT || inputs == RIGHT)
             {
-                if (this->validInput(input, inputs))
+                if (this->checkValidInput(input, inputs))
                 {
                     input = inputs;
                 }
             }
-            // Move snake
-            future_snake = this->MoveSnakeHead(input);
+            // move snake
+            future_snakepos = this->predictSnakeHead(input);
 
             // Check food & snake intersect
-            _isContact = this->ptr_referee->contactFood(future_snake);
-            if (_isContact)
+            b_is_contact = this->p_referee->checkFoodContact(future_snakepos);
+            if (b_is_contact)
             {
-                this->ptr_food->genFood();
-                _score += 10;
+                this->p_food->genFood();
+                score += 10;
             }
-            this->ptr_snake->Move(_isContact, future_snake);
+            this->p_snake->moveAndGrow(b_is_contact, future_snakepos);
 
             this->updateObserver();
 
             // Check meet wall, self-intersection
-            _isTerminate = this->ptr_referee->isTerminate();
-            if (_isTerminate)
+            b_is_terminate = this->p_referee->checkTerminate();
+            if (b_is_terminate)
                 break;
 
-            _speedscale = 5 / this->ptr_referee->adjustSpeed(_score);
-            _speedStack = 0;
+            speedscale = 5 / this->p_referee->adjustSpeed(score);
+            speedstack = 0;
         }
 
-        Sleep(_speed);
+        Sleep(speed);
     }
 }
 
-bool Controller::end()
+bool Controller::endGame()
 {
     char input;
-    if (this->ptr_snake != NULL)
+    if (this->p_snake != NULL)
     {
-        delete this->ptr_snake;
-        this->ptr_snake = NULL;
+        delete this->p_snake;
+        this->p_snake = NULL;
     }
 
-    if (this->ptr_food != NULL)
+    if (this->p_food != NULL)
     {
-        delete this->ptr_food;
-        this->ptr_food = NULL;
+        delete this->p_food;
+        this->p_food = NULL;
     }
 
     while (1)
     {
-        this->ptr_sketcher->drawGameFinish();
+        this->p_sketcher->drawGameFinish();
         FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
-        input = _getch();
+        input = getch();
         if (input == QUIT)
             return true;
         else if (input == RESTART)
             return false;
-        this->ptr_sketcher->drawProperInput();
+        this->p_sketcher->drawProperInput();
     }
 }
 
 void Controller::setObject()
 {
     // Init snake with random pos(food also) and len 1
-    std::pair<char, char> snake_head;
+    std::pair<char, char> snake_headpos;
     // Snake
     srand(time(0));
-    snake_head.first = 2 * (rand() % 28 + 1);
-    snake_head.second = rand() % 28 + 1;
-    this->ptr_snake->Init(snake_head);
+    snake_headpos.first = 2 * (rand() % 28 + 1);
+    snake_headpos.second = rand() % 28 + 1;
+    this->p_snake->genSnake(snake_headpos);
 
     // Food
-    auto p_snake_head = this->ptr_snake->InformHead();
-    int snake_len = this->ptr_snake->InformLen();
-    this->ptr_food->updateSnakeInfo(p_snake_head, snake_len);
-    this->ptr_food->genFood();
+    auto p_snake_head = this->p_snake->informSnakeHeadPos();
+    int snake_len = this->p_snake->informSnakeLen();
+    this->p_food->updateSnakeInfo(p_snake_head, snake_len);
+    this->p_food->genFood();
 }
 
 void Controller::updateObserver()
 {
     // Give object information to observer
-    auto snake_head = this->ptr_snake->InformHead();
-    int snakelen = this->ptr_snake->InformLen();
-    auto food_pos = this->ptr_food->InformFood();
+    auto p_snake_headpos = this->p_snake->informSnakeHeadPos();
+    int snake_len = this->p_snake->informSnakeLen();
+    auto food_pos = this->p_food->informFood();
 
     // snake
-    this->ptr_sketcher->getSnake(snake_head, snakelen);
-    this->ptr_referee->getSnake(snake_head, snakelen);
+    this->p_sketcher->getSnake(p_snake_headpos, snake_len);
+    this->p_referee->getSnake(p_snake_headpos, snake_len);
 
     // food
-    this->ptr_sketcher->getFood(food_pos);
-    this->ptr_referee->getFood(food_pos);
+    this->p_sketcher->getFood(food_pos);
+    this->p_referee->getFood(food_pos);
 }
 
-std::pair<char, char> Controller::MoveSnakeHead(char &input)
+std::pair<char, char> Controller::predictSnakeHead(char &input)
 {
-    std::pair<char, char> cur_snake = *(this->ptr_snake->InformHead());
-    std::pair<char, char> future_snake = cur_snake;
+    std::pair<char, char> cur_snakepos = *(this->p_snake->informSnakeHeadPos());
+    std::pair<char, char> future_snakepospos = cur_snakepos;
     switch (input)
     {
     case UP:
-        future_snake.second -= 1;
+        future_snakepospos.second -= 1;
         break;
     case DOWN:
-        future_snake.second += 1;
+        future_snakepospos.second += 1;
         break;
     case LEFT:
-        future_snake.first -= 2;
+        future_snakepospos.first -= 2;
         break;
     case RIGHT:
-        future_snake.first += 2;
+        future_snakepospos.first += 2;
         break;
     }
-    return future_snake;
+    return future_snakepospos;
 }
 
-bool Controller::validInput(char &input, char &cur_input)
+bool Controller::checkValidInput(char &input, char &cur_input)
 {
     switch (input)
     {

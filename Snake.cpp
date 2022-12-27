@@ -3,47 +3,47 @@
 
 Snake::Snake()
 {
-    this->_head = NULL;
+    this->p_headpos_snake = NULL;
 }
 
 Snake::~Snake()
 {
-    if (this->_head != NULL)
+    if (this->p_headpos_snake != NULL)
     {
-        delete _head;
-        this->_head = NULL;
+        delete p_headpos_snake;
+        this->p_headpos_snake = NULL;
     }
 }
 
-void Snake::Init(std::pair<char, char> &headpos)
+void Snake::genSnake(std::pair<char, char> &target_headpos)
 {
-    this->_head = new std::pair<char, char>;
-    this->_len = 1;
-    *(this->_head) = headpos;
+    this->p_headpos_snake = new std::pair<char, char>;
+    this->len_snake = 1;
+    *(this->p_headpos_snake) = target_headpos;
 }
 
-std::pair<char, char> *Snake::InformHead(void)
+std::pair<char, char> *Snake::informSnakeHeadPos(void)
 {
-    return (this->_head);
+    return (this->p_headpos_snake);
 }
 
-int Snake::InformLen(void)
+int Snake::informSnakeLen(void)
 {
-    return (this->_len);
+    return (this->len_snake);
 }
 
-void Snake::Move(bool isTaller, std::pair<char, char> futurehead)
+void Snake::moveAndGrow(bool b_have2tall, std::pair<char, char> info_futurehead)
 {
     std::pair<char, char> *p_future_head;
-    if (isTaller)
-        ++(this->_len);
-    p_future_head = new std::pair<char, char>[this->_len];
-    int prev_len = this->_len - 1;
-    *p_future_head = futurehead;
-    if (this->_len > 1)
+    if (b_have2tall)
+        ++(this->len_snake);
+    p_future_head = new std::pair<char, char>[this->len_snake];
+    int prev_len = this->len_snake - 1;
+    *p_future_head = info_futurehead;
+    if (this->len_snake > 1)
     {
-        memcpy(p_future_head + 1, _head, sizeof(std::pair<char, char>) * prev_len);
+        memcpy(p_future_head + 1, p_headpos_snake, sizeof(std::pair<char, char>) * prev_len);
     }
-    delete[] this->_head;
-    this->_head = p_future_head;
+    delete[] this->p_headpos_snake;
+    this->p_headpos_snake = p_future_head;
 }

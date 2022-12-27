@@ -11,13 +11,13 @@ Referee::~Referee()
 
 void Referee::getSnake(std::pair<char, char> *p_snake, int &len)
 {
-    this->infoSnake = p_snake;
-    this->snakelen = len;
+    this->p_snake = p_snake;
+    this->snake_len = len;
 }
 
 void Referee::getFood(std::pair<char, char> food)
 {
-    this->infoFood = food;
+    this->p_food = food;
 }
 
 float Referee::adjustSpeed(int &score)
@@ -25,16 +25,16 @@ float Referee::adjustSpeed(int &score)
     return ((int)(score / 30) + 1);
 }
 
-bool Referee::contactFood(std::pair<char, char> &future_snake_head)
+bool Referee::checkFoodContact(std::pair<char, char> &future_snake_head)
 {
-    if (future_snake_head.first == (this->infoFood).first && future_snake_head.second == (this->infoFood).second)
+    if (future_snake_head.first == (this->p_food).first && future_snake_head.second == (this->p_food).second)
     {
         return true;
     }
     return false;
 }
 
-bool Referee::meetWall(std::pair<char, char> &snakehead)
+bool Referee::checkMeetWall(std::pair<char, char> &snakehead)
 {
     if (snakehead.first == 0 || snakehead.first == 58)
         return true;
@@ -43,10 +43,10 @@ bool Referee::meetWall(std::pair<char, char> &snakehead)
     return false;
 }
 
-bool Referee::selfIntersect(std::pair<char, char> &future_head)
+bool Referee::checkSelfIntersect(std::pair<char, char> &future_head)
 {
-    std::pair<char, char> *cur_snake = this->infoSnake;
-    for (int i = 1; i < snakelen; i++)
+    std::pair<char, char> *cur_snake = this->p_snake;
+    for (int i = 1; i < snake_len; i++)
     {
         if (future_head.first == (cur_snake + i)->first && future_head.second == (cur_snake + i)->second)
         {
@@ -56,12 +56,12 @@ bool Referee::selfIntersect(std::pair<char, char> &future_head)
     return false;
 }
 
-bool Referee::isTerminate()
+bool Referee::checkTerminate()
 {
 
-    if (this->meetWall(*(this->infoSnake)))
+    if (this->checkMeetWall(*(this->p_snake)))
         return true;
-    if (this->selfIntersect(*(this->infoSnake)))
+    if (this->checkSelfIntersect(*(this->p_snake)))
         return true;
 
     return false;

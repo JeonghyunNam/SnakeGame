@@ -28,7 +28,7 @@ void Sketcher::drawMenu(void)
     gotoxy(23, 20);
     std::cout << "Press any key!";
 
-    this->ShowConsoleCursor(false);
+    this->showConsoleCursor(false);
     system("pause>nul");
 }
 
@@ -44,7 +44,7 @@ void Sketcher::drawLoad(void)
         gotoxy(30, 15);
     }
 
-    this->ShowConsoleCursor(false);
+    this->showConsoleCursor(false);
 }
 
 void Sketcher::drawInGame(int &score)
@@ -52,7 +52,7 @@ void Sketcher::drawInGame(int &score)
     this->drawWall();
     this->drawSnake();
     this->drawFood();
-    this->ShowConsoleCursor(false);
+    this->showConsoleCursor(false);
     this->drawScore(score);
 }
 
@@ -76,16 +76,16 @@ void Sketcher::drawWall(void)
 
 void Sketcher::drawSnake()
 {
-    for (int i = 0; i < this->snakelen; i++)
+    for (int i = 0; i < this->snake_len; i++)
     {
-        gotoxy((int)(this->infoSnake + i)->first, (int)(this->infoSnake + i)->second);
+        gotoxy((int)(this->p_snake + i)->first, (int)(this->p_snake + i)->second);
         std::cout << "■";
     }
 }
 
 void Sketcher::drawFood()
 {
-    gotoxy((this->infoFood).first, (this->infoFood).second);
+    gotoxy((this->food_pos).first, (this->food_pos).second);
     std::cout << "◯";
 }
 
@@ -111,7 +111,7 @@ void Sketcher::drawGameFinish(void)
     std::cout << "Press R for restart ";
     gotoxy(30, 26);
     std::cout << "      Q for quit";
-    this->ShowConsoleCursor(false);
+    this->showConsoleCursor(false);
 }
 
 void Sketcher::drawProperInput(void)
@@ -124,19 +124,19 @@ void Sketcher::drawProperInput(void)
     std::cout << "□  Input Properly :< □";
     gotoxy(18, 16);
     std::cout << "□□□□□□□□□□□□";
-    this->ShowConsoleCursor(false);
+    this->showConsoleCursor(false);
     system("pause>nul");
 }
 
-void Sketcher::getSnake(std::pair<char, char> *p_snake, int &len)
+void Sketcher::getSnake(std::pair<char, char> *p_snake_info, int &len)
 {
-    this->infoSnake = p_snake;
-    this->snakelen = len;
+    this->p_snake = p_snake_info;
+    this->snake_len = len;
 }
 
 void Sketcher::getFood(std::pair<char, char> food)
 {
-    this->infoFood = food;
+    this->food_pos = food;
 }
 
 void Sketcher::gotoxy(int x, int y)
@@ -147,7 +147,7 @@ void Sketcher::gotoxy(int x, int y)
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
-void Sketcher::ShowConsoleCursor(bool showFlag)
+void Sketcher::showConsoleCursor(bool showFlag)
 {
     HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
 

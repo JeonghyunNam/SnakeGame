@@ -16,7 +16,7 @@ void Food::updateSnakeInfo(std::pair<char, char> *p_snakehead, int &len)
     this->len_snake = len;
 }
 
-std::pair<char, char> Food::InformFood()
+std::pair<char, char> Food::informFood()
 {
     return this->food;
 }

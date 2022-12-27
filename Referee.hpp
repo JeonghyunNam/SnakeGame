@@ -4,8 +4,8 @@
 class Referee
 {
 private:
-    std::pair<char, char> *infoSnake = NULL, infoFood;
-    int snakelen;
+    std::pair<char, char> *p_snake = NULL, p_food;
+    int snake_len;
 
 public:
     Referee();
@@ -14,8 +14,9 @@ public:
     void getSnake(std::pair<char, char> *, int &);
     void getFood(std::pair<char, char>);
     float adjustSpeed(int &);
-    bool meetWall(std::pair<char, char> &);
-    bool contactFood(std::pair<char, char> &);
-    bool selfIntersect(std::pair<char, char> &);
-    bool isTerminate();
+
+    bool checkMeetWall(std::pair<char, char> &);
+    bool checkFoodContact(std::pair<char, char> &);
+    bool checkSelfIntersect(std::pair<char, char> &);
+    bool checkTerminate();
 };

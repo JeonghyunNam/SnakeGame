@@ -4,11 +4,11 @@
 class Sketcher
 {
 private:
-    std::pair<char, char> *infoSnake = NULL;
-    std::pair<char, char> infoFood;
-    int snakelen, score;
+    std::pair<char, char> *p_snake = NULL;
+    std::pair<char, char> food_pos;
+    int snake_len, score;
     void gotoxy(int, int);
-    void ShowConsoleCursor(bool);
+    void showConsoleCursor(bool);
 
 public:
     Sketcher();

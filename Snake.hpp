@@ -5,15 +5,17 @@
 class Snake
 {
 private:
-    int _len;
-    std::pair<char, char> *_head;
+    int len_snake;
+    std::pair<char, char> *p_headpos_snake;
 
 public:
     Snake();
     ~Snake();
-    void Init(std::pair<char, char> &);
-    std::pair<char, char> *InformHead(void);
-    int InformLen(void);
 
-    void Move(bool, std::pair<char, char>);
+    void genSnake(std::pair<char, char> &);
+
+    void moveAndGrow(bool, std::pair<char, char>);
+
+    std::pair<char, char> *informSnakeHeadPos(void);
+    int informSnakeLen(void);
 };
