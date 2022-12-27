@@ -57,61 +57,62 @@ bool Controller::loadGame()
 
 void Controller::doGame()
 {
-    int score = 0, speed = 1, speedstack = 99999;
-    float speedscale = 5.0;
+    int score = 0, init_speed = 200, speed;
     bool b_is_terminate, b_is_contact;
     char input = UP, inputs;
     std::pair<char, char> future_snakepos;
+
+    this->p_sketcher->drawWall();
+    this->p_sketcher->drawObject(score);
     while (1)
     {
         // Draw all Scene
-        this->p_sketcher->drawInGame(score);
-
-        // Get next input
-        if (kbhit())
-        {
-            if (getch() == MAGICKEY)
+        int count_frame = 0;
+        char candidate_input = input;
+        while(count_frame < 15){
+            // Get next input
+            if (kbhit())
             {
-                inputs = getch();
-                FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
-            }
-        }
-
-        // check
-        speedstack += speed;
-
-        if ((float)speedstack > (speed * speedscale))
-        {
-            if (inputs == UP || inputs == DOWN || inputs == LEFT || inputs == RIGHT)
-            {
-                if (this->checkValidInput(input, inputs))
+                if (getch() == MAGICKEY)
                 {
-                    input = inputs;
+                    inputs = getch();
+                    if (inputs == UP || inputs == DOWN || inputs == LEFT || inputs == RIGHT)
+                    {
+                        if (this->checkValidInput(input, inputs))
+                        {
+                            candidate_input = inputs;
+                        }
+                    }
                 }
             }
-            // move snake
-            future_snakepos = this->predictSnakeHead(input);
+            count_frame++;
+            // Sleep(2);
+        }
+        input = candidate_input;
 
-            // Check food & snake intersect
-            b_is_contact = this->p_referee->checkFoodContact(future_snakepos);
-            if (b_is_contact)
-            {
-                this->p_food->genFood();
-                score += 10;
-            }
-            this->p_snake->moveAndGrow(b_is_contact, future_snakepos);
+        // move snake
+        future_snakepos = this->predictSnakeHead(input);
 
-            this->updateObserver();
-
-            // Check meet wall, self-intersection
-            b_is_terminate = this->p_referee->checkTerminate();
-            if (b_is_terminate)
-                break;
-
-            speedscale = 5 / this->p_referee->adjustSpeed(score);
-            speedstack = 0;
+        // Check food & snake intersect
+        b_is_contact = this->p_referee->checkFoodContact(future_snakepos);
+        if (b_is_contact)
+        {
+            this->p_food->genFood();
+            score += 10;
         }
 
+        this->p_sketcher->removeObject();
+
+        this->p_snake->moveAndGrow(b_is_contact, future_snakepos);
+        this->updateObserver();
+        this->p_sketcher->drawObject(score);
+
+        // Check meet wall, self-intersection
+        b_is_terminate = this->p_referee->checkTerminate();
+        if (b_is_terminate)
+            break;
+
+        speed = init_speed - 10*(this->p_referee->adjustSpeed(score));
         Sleep(speed);
     }
 }

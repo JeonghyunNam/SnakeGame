@@ -18,10 +18,18 @@ public:
 
     void drawLoad(void);
 
-    void drawInGame(int &);
+    void drawObject(int &);
+    void removeObject(void);
+
     void drawWall(void);
+    void removeWall(void);
+    
     void drawSnake(void);
+    void removeSnake(void);
+
     void drawFood(void);
+    void removeFood(void);
+
     void drawScore(int &);
 
     void drawGameFinish(void);

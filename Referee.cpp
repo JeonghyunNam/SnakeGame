@@ -20,9 +20,9 @@ void Referee::getFood(std::pair<char, char> food)
     this->p_food = food;
 }
 
-float Referee::adjustSpeed(int &score)
+int Referee::adjustSpeed(int score)
 {
-    return ((int)(score / 30) + 1);
+    return (int)(score / 30);
 }
 
 bool Referee::checkFoodContact(std::pair<char, char> &future_snake_head)

@@ -13,7 +13,7 @@ public:
 
     void getSnake(std::pair<char, char> *, int &);
     void getFood(std::pair<char, char>);
-    float adjustSpeed(int &);
+    int adjustSpeed(int );
 
     bool checkMeetWall(std::pair<char, char> &);
     bool checkFoodContact(std::pair<char, char> &);

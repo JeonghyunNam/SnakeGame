@@ -47,13 +47,17 @@ void Sketcher::drawLoad(void)
     this->showConsoleCursor(false);
 }
 
-void Sketcher::drawInGame(int &score)
+void Sketcher::drawObject(int &score)
 {
-    this->drawWall();
     this->drawSnake();
     this->drawFood();
-    this->showConsoleCursor(false);
     this->drawScore(score);
+    this->showConsoleCursor(false);
+}
+
+void Sketcher::removeObject(void) {
+    this->removeSnake();
+    this->removeFood();
 }
 
 void Sketcher::drawWall(void)
@@ -74,6 +78,23 @@ void Sketcher::drawWall(void)
     std::cout << widthwall;
 }
 
+void Sketcher::removeWall(void) {
+        // width : 60, height : 30
+    system("cls");
+    gotoxy(0, 0);
+    std::string widthwall = "                                                                                          ";
+    std::cout << widthwall;
+    for (int i = 1; i <= 28; i++)
+    {
+        gotoxy(0, i);
+        std::cout << "   ";
+        gotoxy(58, i);
+        std::cout << "   ";
+    }
+    gotoxy(0, 29);
+    std::cout << widthwall;
+}
+
 void Sketcher::drawSnake()
 {
     for (int i = 0; i < this->snake_len; i++)
@@ -83,10 +104,23 @@ void Sketcher::drawSnake()
     }
 }
 
+void Sketcher::removeSnake() {
+    for (int i = 0; i < this->snake_len; i++)
+    {
+        gotoxy((int)(this->p_snake + i)->first, (int)(this->p_snake + i)->second);
+        std::cout << "  ";
+    }
+}
+
 void Sketcher::drawFood()
 {
     gotoxy((this->food_pos).first, (this->food_pos).second);
     std::cout << "◯";
+}
+
+void Sketcher::removeFood() {
+    gotoxy((this->food_pos).first, (this->food_pos).second);
+    std::cout << "  ";
 }
 
 void Sketcher::drawScore(int &scores)
