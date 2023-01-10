@@ -1,7 +1,7 @@
 #include <iostream>
 #include <Windows.h>
 #include <string>
-#include "Sketcher.hpp"
+#include "../include/Sketcher.h"
 
 Sketcher::Sketcher()
 {

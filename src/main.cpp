@@ -1,6 +1,6 @@
 #include <iostream>
 #include <memory>
-#include "Controller.cpp"
+#include "../include/Controller.h"
 
 int main()
 {

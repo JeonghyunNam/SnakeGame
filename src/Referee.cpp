@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Referee.hpp"
+#include "../include/Referee.h"
 
 Referee::Referee()
 {

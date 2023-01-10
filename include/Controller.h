@@ -1,9 +1,11 @@
-#pragma once
+#ifndef CONTROLLER_HPP
+#define CONTROLLER_HPP
+
 #include <iostream>
-#include "Sketcher.cpp"
-#include "Snake.cpp"
-#include "Food.cpp"
-#include "Referee.cpp"
+#include "../include/Sketcher.h"
+#include "../include/Snake.h"
+#include "../include/Food.h"
+#include "../include/Referee.h"
 
 class Controller
 {
@@ -28,3 +30,4 @@ public:
 
     std::pair<char, char> predictSnakeHead(char &); // move snakehead
 };
+#endif

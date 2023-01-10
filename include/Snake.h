@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SNAKE_HPP
+#define SNAKE_HPP
+
 #include <iostream>
 #include <utility>
 
@@ -19,3 +21,4 @@ public:
     std::pair<char, char> *informSnakeHeadPos(void);
     int informSnakeLen(void);
 };
+#endif

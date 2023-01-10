@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SKETCHER_HPP
+#define SKETCHER_HPP
+
 #include <iostream>
 
 class Sketcher
@@ -23,7 +25,7 @@ public:
 
     void drawWall(void);
     void removeWall(void);
-    
+
     void drawSnake(void);
     void removeSnake(void);
 
@@ -38,3 +40,5 @@ public:
     void getSnake(std::pair<char, char> *, int &);
     void getFood(std::pair<char, char>);
 };
+
+#endif

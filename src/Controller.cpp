@@ -3,7 +3,8 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "Controller.hpp"
+#include "../include/Controller.h"
+#include <windows.h>
 
 // Key input
 #define RESTART 114
@@ -69,7 +70,8 @@ void Controller::doGame()
         // Draw all Scene
         int count_frame = 0;
         char candidate_input = input;
-        while(count_frame < 15){
+        while (count_frame < 15)
+        {
             // Get next input
             if (kbhit())
             {
@@ -112,7 +114,7 @@ void Controller::doGame()
         if (b_is_terminate)
             break;
 
-        speed = init_speed - 10*(this->p_referee->adjustSpeed(score));
+        speed = init_speed - 10 * (this->p_referee->adjustSpeed(score));
         Sleep(speed);
     }
 }

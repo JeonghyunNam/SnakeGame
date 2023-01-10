@@ -1,4 +1,6 @@
-#pragma once
+#ifndef FOOD_HPP
+#define FOOD_HPP
+
 #include <iostream>
 
 class Food
@@ -14,3 +16,4 @@ public:
     std::pair<char, char> informFood();
     void updateSnakeInfo(std::pair<char, char> *p, int &len);
 };
+#endif
